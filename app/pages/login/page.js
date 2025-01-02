@@ -1,11 +1,22 @@
 'use client';
 
+import { ContextProvider } from '@/context/Context';
+import { useContext } from 'react';
+
 const Login = () => {
+  const { Login, setUser } = useContext(ContextProvider);
   const handleLogin = (event) => {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
     console.log(email, password);
+    Login(email, password)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        setUser(user);
+      })
+      .catch((error) => console.log(error.message));
   };
   return (
     <div>

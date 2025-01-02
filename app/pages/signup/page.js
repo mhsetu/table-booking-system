@@ -1,9 +1,11 @@
 'use client';
-import { ContextProvider } from '@/context/Context';
+import { auth, ContextProvider } from '@/context/Context';
+import { updateProfile } from 'firebase/auth';
 import { useContext } from 'react';
 
 const Signup = () => {
-  const { Signup } = useContext(ContextProvider);
+  const { Signup, setUser } = useContext(ContextProvider);
+
   const handleSignup = (event) => {
     event.preventDefault();
     const name = event.target.name.value;
@@ -14,8 +16,20 @@ const Signup = () => {
 
     Signup(email, password)
       .then((result) => {
-        (user) => result.user;
+        const user = result.user;
         console.log(user);
+        setUser(user);
+        updateProfile(auth.currentUser, {
+          displayName: name,
+        })
+          .then(() => {
+            // Profile updated!
+            // ...
+          })
+          .catch((error) => {
+            // An error occurred
+            // ...
+          });
       })
       .catch((error) => {
         console.log(error.message);
